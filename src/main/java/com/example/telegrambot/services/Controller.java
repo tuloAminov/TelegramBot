@@ -1,6 +1,7 @@
 package com.example.telegrambot.services;
 
 import com.example.telegrambot.entities.Actor;
+import com.example.telegrambot.entities.Film;
 import com.example.telegrambot.repositories.ActorRepository;
 import com.example.telegrambot.repositories.FilmRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/actor/film")
 public class Controller {
 
     private final ActorRepository actorRepository;
@@ -21,18 +21,45 @@ public class Controller {
         this.filmRepository = filmRepository;
     }
 
-    @PostMapping
-    public Actor saveActorWithFilm(@RequestBody Actor actor) {
+    @PostMapping("/addActor")
+    public Actor saveActor(@RequestBody Actor actor) {
         return actorRepository.save(actor);
     }
 
-    @GetMapping
+    @PostMapping("/addFilm")
+    public Film saveFilm(@RequestBody Film film) {
+        return filmRepository.save(film);
+    }
+
+    @GetMapping("/actors")
     public List<Actor> findAllActors() {
         return  actorRepository.findAll();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/films")
+    public List<Film> findAllFilms() {
+        return  filmRepository.findAll();
+    }
+
+    @GetMapping("/actor/{id}")
     public Actor findActor(@PathVariable Long id) {
         return actorRepository.findById(id).orElse(null);
     }
+
+    @GetMapping("/film/{id}")
+    public Film findFilm(@PathVariable Long id) {
+        return filmRepository.findById(id).orElse(null);
+    }
+
+    @GetMapping("/actorFilms/{id}")
+    public List<Film> actorFilms(@PathVariable Long id) {
+        return actorRepository.getReferenceById(id).getFilms();
+    }
+
+    @GetMapping("/filmActors/{id}")
+    public List<Actor> filmActors(@PathVariable Long id) {
+        return filmRepository.getReferenceById(id).getActors();
+    }
+
+
 }

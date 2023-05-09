@@ -1,13 +1,17 @@
 package com.example.telegrambot.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "actor")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Long.class)
 public class Actor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,8 +24,8 @@ public class Actor {
     @JoinTable(name = "actors_films",
             joinColumns = @JoinColumn(name = "actor_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "film_id", referencedColumnName = "id"))
-    @JsonBackReference
-    private Set<Film> films = new HashSet<>();
+    @JsonIdentityReference(alwaysAsId = true)
+    private List<Film> films = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -63,11 +67,11 @@ public class Actor {
         this.country = country;
     }
 
-    public Set<Film> getFilms() {
+    public List<Film> getFilms() {
         return films;
     }
 
-    public void setFilms(Set<Film> films) {
+    public void setFilms(List<Film> films) {
         this.films = films;
     }
 
