@@ -20,8 +20,15 @@ public class ActorService {
         return actorRepository.findAllByOrderByName();
     }
 
-    public void save(Actor actor) {
-        actorRepository.save(actor);
+    public List<Actor> findAllByNameAndSurname(String name, String surname) {
+        return actorRepository.findAllByNameAndSurname(name, surname);
     }
 
+    public List<Actor> findAllByAge(Integer age) {
+        return actorRepository.findAllByAge(age);
+    }
+
+    public List<Actor> findAllByCountry(String country) {
+        return actorRepository.findAllByCountry(country);
+    }
 }

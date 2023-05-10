@@ -8,5 +8,17 @@ import java.util.List;
 
 @Repository
 public interface FilmRepository extends JpaRepository<Film, Long> {
-    List<Film> findAllByOrderByRank();
+    List<Film> findAllByOrderByRankDesc();
+
+    List<Film> findAllByName(String name);
+
+    List<Film> findAllByGenre(String genre);
+
+    List<Film> findAllByRank(double rank);
+
+    List<Film> findAllByFilmDirector(String filmDirector);
+
+    List<Film> findAllByYear(Integer year);
+
+    List<Film> findAllByCountry(String country);
 }

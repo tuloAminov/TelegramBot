@@ -7,7 +7,6 @@ import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "actor")
@@ -77,12 +76,6 @@ public class Actor {
 
     @Override
     public String toString() {
-        return "Actor{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", age=" + age +
-                ", country='" + country + '\'' +
-                '}';
+        return name + surname + ", " + age + country;
     }
 }

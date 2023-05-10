@@ -1,6 +1,8 @@
 package com.example.telegrambot.services;
 
 import com.example.telegrambot.config.BotConfig;
+import com.example.telegrambot.entities.Actor;
+import com.example.telegrambot.entities.Film;
 import com.vdurmont.emoji.EmojiParser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,10 +67,10 @@ public class TelegramBot extends TelegramLongPollingBot {
                     startCommandReceived(chatId, update.getMessage().getChat().getFirstName());
                     break;
                 case "/films":
-                    sendMessage(chatId, filmService.findAll().get(0).toString());
+                    sendMessage(chatId, getFilms());
                     break;
                 case "/actors":
-                    startCommandReceived(chatId, update.getMessage().getChat().getFirstName());
+                    sendMessage(chatId, getActors());
                     break;
                 case "/genres":
                     startCommandReceived(chatId, update.getMessage().getChat().getFirstName());
@@ -104,6 +106,24 @@ public class TelegramBot extends TelegramLongPollingBot {
         catch (TelegramApiException e) {
             log.error("Error occurred: " + e.getMessage());
         }
+    }
+
+    public String getFilms() {
+        List<Film> films = filmService.findAllOrderByRating();
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 1; i < films.size() + 1; i++)
+            stringBuilder.append(i).append(". ").append(films.get(i-1).toString()).append("\n");
+
+        return stringBuilder.toString();
+    }
+
+    public String getActors() {
+        List<Actor> actors = actorService.findAll();
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 1; i < actors.size() + 1; i++)
+            stringBuilder.append(i).append(". ").append(actors.get(i-1).toString()).append("\n");
+
+        return stringBuilder.toString();
     }
 
 }

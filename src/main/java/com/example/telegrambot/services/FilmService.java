@@ -17,10 +17,30 @@ public class FilmService {
     }
 
     public List<Film> findAllOrderByRating() {
-        return filmRepository.findAllByOrderByRank();
+        return filmRepository.findAllByOrderByRankDesc();
     }
 
-    public List<Film> findAll() {
-        return filmRepository.findAll();
+    public List<Film> findAllByName(String name) {
+        return filmRepository.findAllByName(name);
+    }
+
+    public List<Film> findAllByGenre(String genre) {
+        return filmRepository.findAllByGenre(genre);
+    }
+
+    public List<Film> findAllByRank(double rank) {
+        return filmRepository.findAllByRank(rank);
+    }
+
+    public List<Film> findAllByDirector(String director) {
+        return filmRepository.findAllByFilmDirector(director);
+    }
+
+    public List<Film> findAllByYear(Integer year) {
+        return filmRepository.findAllByYear(year);
+    }
+
+    public List<Film> findAllByCountry(String country) {
+        return filmRepository.findAllByCountry(country);
     }
 }

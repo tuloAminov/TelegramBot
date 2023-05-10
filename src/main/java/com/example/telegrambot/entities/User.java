@@ -3,15 +3,16 @@ package com.example.telegrambot.entities;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
-/*@Entity
+@Entity
 @Table(name = "user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private ArrayList<Film> watchList;
-    private ArrayList<Film> favorites;
+    private List<Long> watchList;
+    private Long favoriteFilms;
     private ArrayList<Film> wantToWatch;
-
-}*/
+    private ArrayList<Actor> favoriteActors;
+}
