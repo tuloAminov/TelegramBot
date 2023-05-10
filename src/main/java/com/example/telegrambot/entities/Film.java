@@ -88,4 +88,16 @@ public class Film {
     public void setCountry(String country) {
         this.country = country;
     }
+
+    @Override
+    public String toString() {
+        return "Film{" +
+                ", name='" + name + '\'' +
+                ", genre='" + genre + '\'' +
+                ", rank=" + rank +
+                ", filmDirector='" + filmDirector + '\'' +
+                ", year=" + year +
+                ", country='" + country + '\'' +
+                '}';
+    }
 }

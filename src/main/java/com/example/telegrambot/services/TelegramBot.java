@@ -1,14 +1,20 @@
 package com.example.telegrambot.services;
 
 import com.example.telegrambot.config.BotConfig;
-import com.example.telegrambot.entities.Actor;
+import com.vdurmont.emoji.EmojiParser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
+import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 @Slf4j
@@ -23,6 +29,19 @@ public class TelegramBot extends TelegramLongPollingBot {
         this.config = config;
         this.actorService = actorService;
         this.filmService = filmService;
+        List<BotCommand> commandList = new ArrayList<>();
+        commandList.add(new BotCommand("/films", "фильмы"));
+        commandList.add(new BotCommand("/actors", "актеры"));
+        commandList.add(new BotCommand("/genres", "жанры"));
+        commandList.add(new BotCommand("/myfilms", "понравившиеся фильмы"));
+        commandList.add(new BotCommand("/myactors", "любимые актеры"));
+        commandList.add(new BotCommand("/watchlist", "буду смотреть"));
+        try {
+            this.execute(new SetMyCommands(commandList, new BotCommandScopeDefault(), null));
+        }
+        catch (TelegramApiException e){
+            log.info("Error setting bot's command list: " + e.getMessage());
+        }
     }
 
     @Override
@@ -42,7 +61,22 @@ public class TelegramBot extends TelegramLongPollingBot {
             long chatId = update.getMessage().getChatId();
 
             switch (messageText) {
-                case "актеры":
+                case "/start":
+                    startCommandReceived(chatId, update.getMessage().getChat().getFirstName());
+                    break;
+                case "/films":
+                    sendMessage(chatId, filmService.findAll().get(0).toString());
+                    break;
+                case "/actors":
+                    startCommandReceived(chatId, update.getMessage().getChat().getFirstName());
+                    break;
+                case "/genres":
+                    startCommandReceived(chatId, update.getMessage().getChat().getFirstName());
+                    break;
+                case "myfilms":
+                    startCommandReceived(chatId, update.getMessage().getChat().getFirstName());
+                    break;
+                case "/watchlist":
                     startCommandReceived(chatId, update.getMessage().getChat().getFirstName());
                     break;
                 default:
@@ -53,15 +87,9 @@ public class TelegramBot extends TelegramLongPollingBot {
     }
 
     private void startCommandReceived(long chatId, String firstName) {
-        StringBuilder stringBuilder = new StringBuilder();
-        int counter = 1;
-        for (Actor actor : actorService.findAll()) {
-            stringBuilder.append(counter + ". " + actor.toString() + "\n");
-            counter++;
-        }
+        String answer = EmojiParser.parseToUnicode("Hi, " + firstName + ", nice to meet you!" + " :blush:");
         log.info("Replied to user " + firstName);
-
-        sendMessage(chatId, stringBuilder.toString());
+        sendMessage(chatId, answer);
     }
 
     private void sendMessage(long chatId, String textToSend) {

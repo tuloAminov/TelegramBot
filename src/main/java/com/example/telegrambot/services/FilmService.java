@@ -16,7 +16,11 @@ public class FilmService {
         this.filmRepository = filmRepository;
     }
 
-    public List<Film> findAllByRating() {
+    public List<Film> findAllOrderByRating() {
         return filmRepository.findAllByOrderByRank();
+    }
+
+    public List<Film> findAll() {
+        return filmRepository.findAll();
     }
 }
