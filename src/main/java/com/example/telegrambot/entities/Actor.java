@@ -76,6 +76,6 @@ public class Actor {
 
     @Override
     public String toString() {
-        return name + surname + ", " + age + country;
+        return name + surname + ", " + age + ", " + country;
     }
 }

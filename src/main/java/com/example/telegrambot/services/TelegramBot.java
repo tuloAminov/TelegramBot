@@ -73,14 +73,17 @@ public class TelegramBot extends TelegramLongPollingBot {
                     sendMessage(chatId, getActors());
                     break;
                 case "/genres":
-                    startCommandReceived(chatId, update.getMessage().getChat().getFirstName());
+                    sendMessage(chatId, filmService.getGenres());
                     break;
-                case "myfilms":
-                    startCommandReceived(chatId, update.getMessage().getChat().getFirstName());
+                /*case "myfilms":
+                    sendMessage(chatId, "sorry, command was not recognized");
                     break;
                 case "/watchlist":
-                    startCommandReceived(chatId, update.getMessage().getChat().getFirstName());
+                    sendMessage(chatId, "sorry, command was not recognized");
                     break;
+                case "/myactors":
+                    sendMessage(chatId, "sorry, command was not recognized");
+                    break;*/
                 default:
                     sendMessage(chatId, "sorry, command was not recognized");
                     break;

@@ -11,8 +11,8 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private List<Long> watchList;
-    private Long favoriteFilms;
-    private ArrayList<Film> wantToWatch;
-    private ArrayList<Actor> favoriteActors;
+/*    private List<Long> watchList;
+    private List<Long> favoriteFilms;
+    private List<Long> wantToWatch;
+    private List<Long> favoriteActors;*/
 }

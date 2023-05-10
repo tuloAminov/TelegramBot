@@ -2,9 +2,11 @@ package com.example.telegrambot.services;
 
 import com.example.telegrambot.entities.Film;
 import com.example.telegrambot.repositories.FilmRepository;
+import org.apache.logging.log4j.util.StringBuilders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -42,5 +44,20 @@ public class FilmService {
 
     public List<Film> findAllByCountry(String country) {
         return filmRepository.findAllByCountry(country);
+    }
+
+    public String getGenres() {
+        StringBuilder stringBuilder = new StringBuilder();
+        List<String> genres = new ArrayList<>();
+        int counter = 1;
+        for (Film film : findAllOrderByRating()) {
+            if (!genres.contains(film.getGenre())) {
+                genres.add(film.getGenre());
+                stringBuilder.append(counter).append(". ").append(film.getGenre()).append("\n");
+                counter++;
+            }
+        }
+
+        return stringBuilder.toString();
     }
 }
