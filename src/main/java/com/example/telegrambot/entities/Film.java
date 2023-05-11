@@ -25,6 +25,18 @@ public class Film {
     private Integer year;
     private String country;
 
+    @ManyToMany(mappedBy = "watchList", fetch = FetchType.LAZY)
+    @JsonIdentityReference(alwaysAsId = true)
+    private List<User> userWatchList = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "favoriteFilms", fetch = FetchType.LAZY)
+    @JsonIdentityReference(alwaysAsId = true)
+    private List<User> userFavoriteFilms = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "wantToWatch", fetch = FetchType.LAZY)
+    @JsonIdentityReference(alwaysAsId = true)
+    private List<User> userWantToWatch = new ArrayList<>();
+
     public Long getId() {
         return id;
     }
@@ -87,6 +99,30 @@ public class Film {
 
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    public List<User> getUserWatchList() {
+        return userWatchList;
+    }
+
+    public void setUserWatchList(List<User> userWatchList) {
+        this.userWatchList = userWatchList;
+    }
+
+    public List<User> getUserFavoriteFilms() {
+        return userFavoriteFilms;
+    }
+
+    public void setUserFavoriteFilms(List<User> userFavoriteFilms) {
+        this.userFavoriteFilms = userFavoriteFilms;
+    }
+
+    public List<User> getUserWantToWatch() {
+        return userWantToWatch;
+    }
+
+    public void setUserWantToWatch(List<User> userWantToWatch) {
+        this.userWantToWatch = userWantToWatch;
     }
 
     @Override

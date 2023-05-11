@@ -26,6 +26,10 @@ public class Actor {
     @JsonIdentityReference(alwaysAsId = true)
     private List<Film> films = new ArrayList<>();
 
+    @ManyToMany(mappedBy = "favoriteActors", fetch = FetchType.LAZY)
+    @JsonIdentityReference(alwaysAsId = true)
+    private List<User> userWantToWatch = new ArrayList<>();
+
     public Long getId() {
         return id;
     }
@@ -72,6 +76,14 @@ public class Actor {
 
     public void setFilms(List<Film> films) {
         this.films = films;
+    }
+
+    public List<User> getUserWantToWatch() {
+        return userWantToWatch;
+    }
+
+    public void setUserWantToWatch(List<User> userWantToWatch) {
+        this.userWantToWatch = userWantToWatch;
     }
 
     @Override

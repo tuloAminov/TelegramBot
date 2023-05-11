@@ -1,9 +1,11 @@
-package com.example.telegrambot.services;
+package com.example.telegrambot.controllers;
 
 import com.example.telegrambot.entities.Actor;
 import com.example.telegrambot.entities.Film;
+import com.example.telegrambot.entities.User;
 import com.example.telegrambot.repositories.ActorRepository;
 import com.example.telegrambot.repositories.FilmRepository;
+import com.example.telegrambot.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,11 +16,13 @@ public class Controller {
 
     private final ActorRepository actorRepository;
     private final FilmRepository filmRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public Controller(ActorRepository actorRepository, FilmRepository filmRepository) {
+    public Controller(ActorRepository actorRepository, FilmRepository filmRepository, UserRepository userRepository) {
         this.actorRepository = actorRepository;
         this.filmRepository = filmRepository;
+        this.userRepository = userRepository;
     }
 
     @PostMapping("/addActor")
@@ -29,6 +33,11 @@ public class Controller {
     @PostMapping("/addFilm")
     public Film saveFilm(@RequestBody Film film) {
         return filmRepository.save(film);
+    }
+
+    @PostMapping("/addUser")
+    public User saveUser(@RequestBody User user) {
+        return userRepository.save(user);
     }
 
     @GetMapping("/actors")
