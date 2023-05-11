@@ -75,7 +75,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                 case "/genres":
                     sendMessage(chatId, filmService.getGenres());
                     break;
-                /*case "myfilms":
+                case "myfilms":
                     sendMessage(chatId, "sorry, command was not recognized");
                     break;
                 case "/watchlist":
@@ -83,7 +83,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                     break;
                 case "/myactors":
                     sendMessage(chatId, "sorry, command was not recognized");
-                    break;*/
+                    break;
                 default:
                     sendMessage(chatId, "sorry, command was not recognized");
                     break;
