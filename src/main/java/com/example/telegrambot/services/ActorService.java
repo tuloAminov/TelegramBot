@@ -16,8 +16,13 @@ public class ActorService {
         this.actorRepository = actorRepository;
     }
 
-    public List<Actor> findAll() {
-        return actorRepository.findAllByOrderByName();
+    public String getActors() {
+        List<Actor> actors = actorRepository.findAllByOrderByName();
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 1; i < actors.size() + 1; i++)
+            stringBuilder.append(i).append(". ").append(actors.get(i-1).toString()).append("\n");
+
+        return stringBuilder.toString();
     }
 
     public List<Actor> findAllByNameAndSurname(String name, String surname) {

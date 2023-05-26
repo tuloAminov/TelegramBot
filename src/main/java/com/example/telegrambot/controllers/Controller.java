@@ -60,6 +60,11 @@ public class Controller {
         return filmRepository.findById(id).orElse(null);
     }
 
+    @GetMapping("/filmByName/{name}")
+    public Film findFilmByName(@PathVariable String name) {
+        return filmRepository.findAllByName(name).get(0);
+    }
+
     @GetMapping("/actorFilms/{id}")
     public List<Film> actorFilms(@PathVariable Long id) {
         return actorRepository.getReferenceById(id).getFilms();

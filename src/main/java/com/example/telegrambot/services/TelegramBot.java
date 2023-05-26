@@ -1,8 +1,6 @@
 package com.example.telegrambot.services;
 
 import com.example.telegrambot.config.BotConfig;
-import com.example.telegrambot.entities.Actor;
-import com.example.telegrambot.entities.Film;
 import com.vdurmont.emoji.EmojiParser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,31 +60,40 @@ public class TelegramBot extends TelegramLongPollingBot {
             String messageText = update.getMessage().getText();
             long chatId = update.getMessage().getChatId();
 
-            switch (messageText) {
-                case "/start":
-                    startCommandReceived(chatId, update.getMessage().getChat().getFirstName());
-                    break;
-                case "/films":
-                    sendMessage(chatId, getFilms());
-                    break;
-                case "/actors":
-                    sendMessage(chatId, getActors());
-                    break;
-                case "/genres":
-                    sendMessage(chatId, filmService.getGenres());
-                    break;
-                case "myfilms":
-                    sendMessage(chatId, "sorry, command was not recognized");
-                    break;
-                case "/watchlist":
-                    sendMessage(chatId, "sorry, command was not recognized");
-                    break;
-                case "/myactors":
-                    sendMessage(chatId, "sorry, command was not recognized");
-                    break;
-                default:
-                    sendMessage(chatId, "sorry, command was not recognized");
-                    break;
+            if (messageText.contains("Film: ")) {
+                sendMessage(chatId, filmService.getFilmsByName(messageText.replace("Film: ", "")));
+            }
+
+            else if (messageText.contains("Genre: ")) {
+                sendMessage(chatId, filmService.getFilmsByGenre(messageText.replace("Genre: ", "")));
+            }
+
+            else if (messageText.contains("Film director: ")) {
+                sendMessage(chatId, filmService.getFilmsByFilmDirector(messageText.replace("Film director: ", "")));
+            }
+
+            else if (messageText.contains("Country: ")) {
+                sendMessage(chatId, filmService.getFilmsByCountry(messageText.replace("Country: ", "")));
+            }
+
+            else {
+                switch (messageText) {
+                    case "/start":
+                        startCommandReceived(chatId, update.getMessage().getChat().getFirstName());
+                        break;
+                    case "/films":
+                        sendMessage(chatId, filmService.getFilms());
+                        break;
+                    case "/actors":
+                        sendMessage(chatId, actorService.getActors());
+                        break;
+                    case "/genres":
+                        sendMessage(chatId, filmService.getGenres());
+                        break;
+                    default:
+                        sendMessage(chatId, "sorry, command was not recognized");
+                        break;
+                }
             }
         }
     }
@@ -109,24 +116,6 @@ public class TelegramBot extends TelegramLongPollingBot {
         catch (TelegramApiException e) {
             log.error("Error occurred: " + e.getMessage());
         }
-    }
-
-    public String getFilms() {
-        List<Film> films = filmService.findAllOrderByRating();
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 1; i < films.size() + 1; i++)
-            stringBuilder.append(i).append(". ").append(films.get(i-1).toString()).append("\n");
-
-        return stringBuilder.toString();
-    }
-
-    public String getActors() {
-        List<Actor> actors = actorService.findAll();
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 1; i < actors.size() + 1; i++)
-            stringBuilder.append(i).append(". ").append(actors.get(i-1).toString()).append("\n");
-
-        return stringBuilder.toString();
     }
 
 }
