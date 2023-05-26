@@ -61,38 +61,52 @@ public class TelegramBot extends TelegramLongPollingBot {
             long chatId = update.getMessage().getChatId();
 
             if (messageText.contains("Film: ")) {
-                sendMessage(chatId, filmService.getFilmsByName(messageText.replace("Film: ", "")));
+                String text = filmService.getFilmsByName(messageText.replace("Film: ", ""));
+                if (text.isEmpty())
+                    text = "there is no such movie";
+                sendMessage(chatId, text);
             }
 
             else if (messageText.contains("Genre: ")) {
-                sendMessage(chatId, filmService.getFilmsByGenre(messageText.replace("Genre: ", "")));
+                String text = filmService.getFilmsByGenre(messageText.replace("Genre: ", ""));
+                if (text.isEmpty())
+                    text = "there is no such genre";
+                sendMessage(chatId, text);
             }
 
             else if (messageText.contains("Film director: ")) {
-                sendMessage(chatId, filmService.getFilmsByFilmDirector(messageText.replace("Film director: ", "")));
+                String text = filmService.getFilmsByFilmDirector(messageText.replace("Film director: ", ""));
+                if (text.isEmpty())
+                    text = "there is no such director";
+                sendMessage(chatId, text);
             }
 
             else if (messageText.contains("Country: ")) {
-                sendMessage(chatId, filmService.getFilmsByCountry(messageText.replace("Country: ", "")));
+                String text = filmService.getFilmsByCountry(messageText.replace("Country: ", ""));
+                if (text.isEmpty())
+                    text = "there is no such country";
+                sendMessage(chatId, text);
+
+                String text1 = actorService.getActorsByCountry(messageText.replace("Country: ", ""));
+                if (text1.isEmpty())
+                    text1 = "there is no such country";
+                sendMessage(chatId, text1);
+            }
+
+            else if (messageText.contains("Actor: ")) {
+                String text = actorService.getActorsByNameOrSurname(messageText.replace("Actor: ", ""));
+                if (text.isEmpty())
+                    text = "there is no such actor";
+                sendMessage(chatId, text);
             }
 
             else {
                 switch (messageText) {
-                    case "/start":
-                        startCommandReceived(chatId, update.getMessage().getChat().getFirstName());
-                        break;
-                    case "/films":
-                        sendMessage(chatId, filmService.getFilms());
-                        break;
-                    case "/actors":
-                        sendMessage(chatId, actorService.getActors());
-                        break;
-                    case "/genres":
-                        sendMessage(chatId, filmService.getGenres());
-                        break;
-                    default:
-                        sendMessage(chatId, "sorry, command was not recognized");
-                        break;
+                    case "/start" -> startCommandReceived(chatId, update.getMessage().getChat().getFirstName());
+                    case "/films" -> sendMessage(chatId, filmService.getFilms());
+                    case "/actors" -> sendMessage(chatId, actorService.getActors());
+                    case "/genres" -> sendMessage(chatId, filmService.getGenres());
+                    default -> sendMessage(chatId, "sorry, command was not recognized");
                 }
             }
         }

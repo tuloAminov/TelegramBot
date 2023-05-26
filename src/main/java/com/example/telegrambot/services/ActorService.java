@@ -25,15 +25,30 @@ public class ActorService {
         return stringBuilder.toString();
     }
 
-    public List<Actor> findAllByNameAndSurname(String name, String surname) {
-        return actorRepository.findAllByNameAndSurname(name, surname);
+    public String getActorsByNameOrSurname(String name) {
+        List<Actor> actors = actorRepository.findAllByNameOrSurname(name, name);
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 1; i < actors.size() + 1; i++)
+            stringBuilder.append(i).append(". ").append(actors.get(i-1).toString()).append("\n");
+
+        return stringBuilder.toString();
     }
 
-    public List<Actor> findAllByAge(Integer age) {
-        return actorRepository.findAllByAge(age);
+    public String getActorsByAge(int age) {
+        List<Actor> actors = actorRepository.findAllByAge(age);
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 1; i < actors.size() + 1; i++)
+            stringBuilder.append(i).append(". ").append(actors.get(i-1).toString()).append("\n");
+
+        return stringBuilder.toString();
     }
 
-    public List<Actor> findAllByCountry(String country) {
-        return actorRepository.findAllByCountry(country);
+    public String getActorsByCountry(String country) {
+        List<Actor> actors = actorRepository.findAllByCountry(country);
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 1; i < actors.size() + 1; i++)
+            stringBuilder.append(i).append(". ").append(actors.get(i-1).toString()).append("\n");
+
+        return stringBuilder.toString();
     }
 }
