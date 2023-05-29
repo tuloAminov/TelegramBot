@@ -10,6 +10,8 @@ import java.util.List;
 public interface ActorRepository extends JpaRepository<Actor, Long> {
     List<Actor> findAllByOrderByName();
 
+    List<Actor> getActorById(Long id);
+
     List<Actor> findAllByNameOrSurname(String name, String surname);
 
     List<Actor> findAllByAge(Integer age);

@@ -1,7 +1,6 @@
 package com.example.telegrambot.services;
 
 import com.example.telegrambot.config.BotConfig;
-import com.example.telegrambot.entities.Film;
 import com.example.telegrambot.entities.User;
 import com.vdurmont.emoji.EmojiParser;
 import lombok.extern.slf4j.Slf4j;
@@ -37,9 +36,10 @@ public class TelegramBot extends TelegramLongPollingBot {
         commandList.add(new BotCommand("/films", "фильмы"));
         commandList.add(new BotCommand("/actors", "актеры"));
         commandList.add(new BotCommand("/genres", "жанры"));
-        commandList.add(new BotCommand("/myfilms", "понравившиеся фильмы"));
-        commandList.add(new BotCommand("/myactors", "любимые актеры"));
+        commandList.add(new BotCommand("/favfilms", "понравившиеся фильмы"));
         commandList.add(new BotCommand("/watchlist", "буду смотреть"));
+        commandList.add(new BotCommand("/watched", "просмотренные фильмы"));
+        commandList.add(new BotCommand("/myactors", "любимые актеры"));
         try {
             this.execute(new SetMyCommands(commandList, new BotCommandScopeDefault(), null));
         }
@@ -98,7 +98,8 @@ public class TelegramBot extends TelegramLongPollingBot {
             }
 
             else if (messageText.contains("Actor: ")) {
-                String text = putInString(actorService.getActorsByNameOrSurname(messageText.replace("Actor: ", "")));
+                String[] str = messageText.replace("Actor's films: ", "").split(" ");
+                String text = putInString(actorService.getActorsByNameAndSurname(str[0], str[1]));
                 if (text.isEmpty())
                     text = "there is no such actor";
                 sendMessage(chatId, text);
@@ -139,6 +140,10 @@ public class TelegramBot extends TelegramLongPollingBot {
                     case "/films" -> sendMessage(chatId, putInString(filmService.getFilms()));
                     case "/actors" -> sendMessage(chatId, putInString(actorService.getActors()));
                     case "/genres" -> sendMessage(chatId, filmService.getGenres());
+                    case "/favfilms" -> sendMessage(chatId, putInString(userService.getFavFilms(chatId)));
+                    case "/watchlist" -> sendMessage(chatId, putInString(userService.getFilmToWatch(chatId)));
+                    case "/watched" -> sendMessage(chatId, putInString(userService.getWatchedFilm(chatId)));
+                    case "/myactors" -> sendMessage(chatId, putInString(userService.getFavouriteActor(chatId)));
                     default -> sendMessage(chatId, "sorry, command was not recognized");
                 }
             }

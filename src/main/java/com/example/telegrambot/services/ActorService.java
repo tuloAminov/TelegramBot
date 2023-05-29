@@ -20,6 +20,10 @@ public class ActorService {
         return actorRepository.findAllByOrderByName();
     }
 
+    public Actor getActorById(Long id) {
+        return actorRepository.getActorById(id).get(0);
+    }
+
     public List<Actor> getActorsByNameOrSurname(String name) {
         return actorRepository.findAllByNameOrSurname(name, name);
     }

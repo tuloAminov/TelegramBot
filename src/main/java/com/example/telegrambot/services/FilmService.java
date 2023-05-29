@@ -25,6 +25,10 @@ public class FilmService {
         return filmRepository.findAllByName(name);
     }
 
+    public Film getFilmsById(Long id) {
+        return filmRepository.getFilmById(id).get(0);
+    }
+
     public List<Film> getFilmsByGenre(String genre) {
         return filmRepository.findAllByGenre(genre);
     }

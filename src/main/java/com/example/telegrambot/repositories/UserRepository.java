@@ -8,6 +8,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
@@ -30,4 +32,24 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query(value = "insert into user_favorite_actors (user_id, actor_id) values (?, ?)", nativeQuery = true)
     @Transactional
     void addFavouriteActor(@Param("user_id") Long user_id, @Param("actor_id") Long actor_id);
+
+    @Modifying
+    @Query(value = "select film_id from user_favorite_films where user_id = :user_id", nativeQuery = true)
+    @Transactional
+    List<Long> getFavouriteFilms(@Param("user_id") Long user_id);
+
+    @Modifying
+    @Query(value = "select film_id from user_watch_list where user_id = :user_id", nativeQuery = true)
+    @Transactional
+    List<Long> getWatchedFilms(@Param("user_id") Long user_id);
+
+    @Modifying
+    @Query(value = "select film_id from user_want_to_watch where user_id = :user_id", nativeQuery = true)
+    @Transactional
+    List<Long> getFilmsToWatch(@Param("user_id") Long user_id);
+
+    @Modifying
+    @Query(value = "select actor_id from user_favorite_actors where user_id = :user_id", nativeQuery = true)
+    @Transactional
+    List<Long> getFavouriteActors(@Param("user_id") Long user_id);
 }

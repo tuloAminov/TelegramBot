@@ -12,6 +12,8 @@ public interface FilmRepository extends JpaRepository<Film, Long> {
 
     List<Film> findAllByName(String name);
 
+    List<Film> getFilmById(Long id);
+
     List<Film> findAllByGenre(String genre);
 
     List<Film> findAllByRank(double rank);
