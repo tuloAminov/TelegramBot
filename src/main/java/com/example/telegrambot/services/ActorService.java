@@ -16,39 +16,23 @@ public class ActorService {
         this.actorRepository = actorRepository;
     }
 
-    public String getActors() {
-        List<Actor> actors = actorRepository.findAllByOrderByName();
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 1; i < actors.size() + 1; i++)
-            stringBuilder.append(i).append(". ").append(actors.get(i-1).toString()).append("\n");
-
-        return stringBuilder.toString();
+    public List<Actor> getActors() {
+        return actorRepository.findAllByOrderByName();
     }
 
-    public String getActorsByNameOrSurname(String name) {
-        List<Actor> actors = actorRepository.findAllByNameOrSurname(name, name);
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 1; i < actors.size() + 1; i++)
-            stringBuilder.append(i).append(". ").append(actors.get(i-1).toString()).append("\n");
-
-        return stringBuilder.toString();
+    public List<Actor> getActorsByNameOrSurname(String name) {
+        return actorRepository.findAllByNameOrSurname(name, name);
     }
 
-    public String getActorsByAge(int age) {
-        List<Actor> actors = actorRepository.findAllByAge(age);
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 1; i < actors.size() + 1; i++)
-            stringBuilder.append(i).append(". ").append(actors.get(i-1).toString()).append("\n");
-
-        return stringBuilder.toString();
+    public List<Actor> getActorsByNameAndSurname(String name, String surname) {
+        return actorRepository.findAllByNameAndSurname(name, surname);
     }
 
-    public String getActorsByCountry(String country) {
-        List<Actor> actors = actorRepository.findAllByCountry(country);
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 1; i < actors.size() + 1; i++)
-            stringBuilder.append(i).append(". ").append(actors.get(i-1).toString()).append("\n");
+    public List<Actor> getActorsByAge(int age) {
+        return actorRepository.findAllByAge(age);
+    }
 
-        return stringBuilder.toString();
+    public List<Actor> getActorsByCountry(String country) {
+        return actorRepository.findAllByCountry(country);
     }
 }

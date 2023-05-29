@@ -17,58 +17,28 @@ public class FilmService {
         this.filmRepository = filmRepository;
     }
 
-    public String getFilms() {
-        List<Film> films = filmRepository.findAllByOrderByRankDesc();
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 1; i < films.size() + 1; i++)
-            stringBuilder.append(i).append(". ").append(films.get(i-1).toString()).append("\n");
-
-        return stringBuilder.toString();
+    public List<Film> getFilms() {
+        return filmRepository.findAllByOrderByRankDesc();
     }
 
-    public String getFilmsByName(String name) {
-        List<Film> films = filmRepository.findAllByName(name);
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 1; i < films.size() + 1; i++)
-            stringBuilder.append(i).append(". ").append(films.get(i-1).toString()).append("\n");
-
-        return stringBuilder.toString();
+    public List<Film> getFilmsByName(String name) {
+        return filmRepository.findAllByName(name);
     }
 
-    public String getFilmsByGenre(String genre) {
-        List<Film> films = filmRepository.findAllByGenre(genre);
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 1; i < films.size() + 1; i++)
-            stringBuilder.append(i).append(". ").append(films.get(i-1).toString()).append("\n");
-
-        return stringBuilder.toString();
+    public List<Film> getFilmsByGenre(String genre) {
+        return filmRepository.findAllByGenre(genre);
     }
 
-    public String getFilmsByFilmDirector(String FilmDirector) {
-        List<Film> films = filmRepository.findAllByFilmDirector(FilmDirector);
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 1; i < films.size() + 1; i++)
-            stringBuilder.append(i).append(". ").append(films.get(i-1).toString()).append("\n");
-
-        return stringBuilder.toString();
+    public List<Film> getFilmsByFilmDirector(String FilmDirector) {
+        return filmRepository.findAllByFilmDirector(FilmDirector);
     }
 
-    public String getFilmsByYear(int year) {
-        List<Film> films = filmRepository.findAllByRank(year);
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 1; i < films.size() + 1; i++)
-            stringBuilder.append(i).append(". ").append(films.get(i-1).toString()).append("\n");
-
-        return stringBuilder.toString();
+    public List<Film> getFilmsByYear(int year) {
+        return filmRepository.findAllByRank(year);
     }
 
-    public String getFilmsByCountry(String country) {
-        List<Film> films = filmRepository.findAllByCountry(country);
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 1; i < films.size() + 1; i++)
-            stringBuilder.append(i).append(". ").append(films.get(i-1).toString()).append("\n");
-
-        return stringBuilder.toString();
+    public List<Film> getFilmsByCountry(String country) {
+        return filmRepository.findAllByCountry(country);
     }
 
     public String getGenres() {

@@ -37,6 +37,8 @@ public class Film {
     @JsonIdentityReference(alwaysAsId = true)
     private List<User> userWantToWatch = new ArrayList<>();
 
+    private String link;
+
     public Long getId() {
         return id;
     }
@@ -125,8 +127,16 @@ public class Film {
         this.userWantToWatch = userWantToWatch;
     }
 
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
+
     @Override
     public String toString() {
-        return name + ", " + genre + ", " + rank;
+        return name + ", " + genre + ", " + rank + ": " + link;
     }
 }

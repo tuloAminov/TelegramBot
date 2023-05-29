@@ -1,6 +1,8 @@
 package com.example.telegrambot.services;
 
 import com.example.telegrambot.config.BotConfig;
+import com.example.telegrambot.entities.Film;
+import com.example.telegrambot.entities.User;
 import com.vdurmont.emoji.EmojiParser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +25,14 @@ public class TelegramBot extends TelegramLongPollingBot {
     private final BotConfig config;
     private final ActorService actorService;
     private final FilmService filmService;
+    private final UserService userService;
 
     @Autowired
-    public TelegramBot(BotConfig config, ActorService actorService, FilmService filmService) {
+    public TelegramBot(BotConfig config, ActorService actorService, FilmService filmService, UserService userService) {
         this.config = config;
         this.actorService = actorService;
         this.filmService = filmService;
+        this.userService = userService;
         List<BotCommand> commandList = new ArrayList<>();
         commandList.add(new BotCommand("/films", "фильмы"));
         commandList.add(new BotCommand("/actors", "актеры"));
@@ -61,50 +65,79 @@ public class TelegramBot extends TelegramLongPollingBot {
             long chatId = update.getMessage().getChatId();
 
             if (messageText.contains("Film: ")) {
-                String text = filmService.getFilmsByName(messageText.replace("Film: ", ""));
+                String text = putInString(filmService.getFilmsByName(messageText.replace("Film: ", "")));
                 if (text.isEmpty())
                     text = "there is no such movie";
                 sendMessage(chatId, text);
             }
 
             else if (messageText.contains("Genre: ")) {
-                String text = filmService.getFilmsByGenre(messageText.replace("Genre: ", ""));
+                String text = putInString(filmService.getFilmsByGenre(messageText.replace("Genre: ", "")));
                 if (text.isEmpty())
                     text = "there is no such genre";
                 sendMessage(chatId, text);
             }
 
             else if (messageText.contains("Film director: ")) {
-                String text = filmService.getFilmsByFilmDirector(messageText.replace("Film director: ", ""));
+                String text = putInString(filmService.getFilmsByFilmDirector(messageText.replace("Film director: ", "")));
                 if (text.isEmpty())
                     text = "there is no such director";
                 sendMessage(chatId, text);
             }
 
             else if (messageText.contains("Country: ")) {
-                String text = filmService.getFilmsByCountry(messageText.replace("Country: ", ""));
+                String text = putInString(filmService.getFilmsByCountry(messageText.replace("Country: ", "")));
                 if (text.isEmpty())
                     text = "there is no such country";
                 sendMessage(chatId, text);
 
-                String text1 = actorService.getActorsByCountry(messageText.replace("Country: ", ""));
+                String text1 = putInString(actorService.getActorsByCountry(messageText.replace("Country: ", "")));
                 if (text1.isEmpty())
                     text1 = "there is no such country";
                 sendMessage(chatId, text1);
             }
 
             else if (messageText.contains("Actor: ")) {
-                String text = actorService.getActorsByNameOrSurname(messageText.replace("Actor: ", ""));
+                String text = putInString(actorService.getActorsByNameOrSurname(messageText.replace("Actor: ", "")));
                 if (text.isEmpty())
                     text = "there is no such actor";
                 sendMessage(chatId, text);
             }
 
+            else if (messageText.contains("Actor's films: ")) {
+                String[] str = messageText.replace("Actor's films: ", "").split(" ");
+                String text = putInString(actorService.getActorsByNameAndSurname(str[0], str[1]));
+                if (text.isEmpty())
+                    text = "there is no such actor";
+                sendMessage(chatId, text);
+            }
+
+            else if (messageText.contains("Fav film: ")) {
+                long filmId = filmService.getFilmsByName(messageText.replace("Fav film: ", "")).get(0).getId();
+                userService.addFavouriteFilm(chatId, filmId);
+            }
+
+            else if (messageText.contains("Watched: ")) {
+                long filmId = filmService.getFilmsByName(messageText.replace("Watched: ", "")).get(0).getId();
+                userService.addWatchedFilm(chatId, filmId);
+            }
+
+            else if (messageText.contains("To watch: ")) {
+                long filmId = filmService.getFilmsByName(messageText.replace("To watch: ", "")).get(0).getId();
+                userService.addFilmToWatch(chatId, filmId);
+            }
+
+            else if (messageText.contains("Fav actor: ")) {
+                String[] fullName = messageText.replace("Fav actor: ", "").split(" ");
+                long filmId = actorService.getActorsByNameAndSurname(fullName[0], fullName[1]).get(0).getId();
+                userService.addFavouriteActor(chatId, filmId);
+            }
+
             else {
                 switch (messageText) {
                     case "/start" -> startCommandReceived(chatId, update.getMessage().getChat().getFirstName());
-                    case "/films" -> sendMessage(chatId, filmService.getFilms());
-                    case "/actors" -> sendMessage(chatId, actorService.getActors());
+                    case "/films" -> sendMessage(chatId, putInString(filmService.getFilms()));
+                    case "/actors" -> sendMessage(chatId, putInString(actorService.getActors()));
                     case "/genres" -> sendMessage(chatId, filmService.getGenres());
                     default -> sendMessage(chatId, "sorry, command was not recognized");
                 }
@@ -115,6 +148,9 @@ public class TelegramBot extends TelegramLongPollingBot {
     private void startCommandReceived(long chatId, String firstName) {
         String answer = EmojiParser.parseToUnicode("Hi, " + firstName + ", nice to meet you!" + " :blush:");
         log.info("Replied to user " + firstName);
+        User newUser = new User();
+        newUser.setId(chatId);
+        userService.addUser(newUser);
         sendMessage(chatId, answer);
     }
 
@@ -132,4 +168,11 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
+    public String putInString(List list) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 1; i < list.size() + 1; i++)
+            stringBuilder.append(i).append(". ").append(list.get(i-1).toString()).append("\n");
+
+        return stringBuilder.toString();
+    }
 }

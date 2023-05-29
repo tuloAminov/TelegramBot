@@ -16,4 +16,5 @@ public interface ActorRepository extends JpaRepository<Actor, Long> {
 
     List<Actor> findAllByCountry(String country);
 
+    List<Actor> findAllByNameAndSurname(String name, String surname);
 }
