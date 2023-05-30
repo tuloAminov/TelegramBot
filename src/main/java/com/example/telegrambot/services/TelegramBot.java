@@ -38,7 +38,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         commandList.add(new BotCommand("/genres", "жанры"));
         commandList.add(new BotCommand("/favfilms", "понравившиеся фильмы"));
         commandList.add(new BotCommand("/watchlist", "буду смотреть"));
-        commandList.add(new BotCommand("/watched", "просмотренные фильмы"));
+        commandList.add(new BotCommand("/watchedlist", "просмотренные фильмы"));
         commandList.add(new BotCommand("/myactors", "любимые актеры"));
         try {
             this.execute(new SetMyCommands(commandList, new BotCommandScopeDefault(), null));
@@ -98,7 +98,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             }
 
             else if (messageText.contains("Actor: ")) {
-                String[] str = messageText.replace("Actor's films: ", "").split(" ");
+                String[] str = messageText.replace("Actor: ", "").split(" ");
                 String text = putInString(actorService.getActorsByNameAndSurname(str[0], str[1]));
                 if (text.isEmpty())
                     text = "there is no such actor";
@@ -107,10 +107,24 @@ public class TelegramBot extends TelegramLongPollingBot {
 
             else if (messageText.contains("Actor's films: ")) {
                 String[] str = messageText.replace("Actor's films: ", "").split(" ");
-                String text = putInString(actorService.getActorsByNameAndSurname(str[0], str[1]));
+                Long id = actorService.getActorsByNameAndSurname(str[0], str[1]).get(0).getId();
+                String text = putInString(filmService.getFilmsByActor(id));
                 if (text.isEmpty())
                     text = "there is no such actor";
                 sendMessage(chatId, text);
+            }
+
+            else if (messageText.contains("Film's actors: ")) {
+                Long id = filmService.getFilmsByName(messageText.replace("Film's actors: ", "")).get(0).getId();
+                String text = putInString(actorService.getActorsByFilm(id));
+                if (text.isEmpty())
+                    text = "there is no such film";
+                sendMessage(chatId, text);
+            }
+
+            else if (messageText.contains("Add: ")) {
+                String[] strings = messageText.replace("Add: ", "").split("&");
+                filmService.add(Long.parseLong(strings[0]), Long.parseLong(strings[1]));
             }
 
             else if (messageText.contains("Fav film: ")) {
@@ -142,7 +156,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                     case "/genres" -> sendMessage(chatId, filmService.getGenres());
                     case "/favfilms" -> sendMessage(chatId, putInString(userService.getFavFilms(chatId)));
                     case "/watchlist" -> sendMessage(chatId, putInString(userService.getFilmToWatch(chatId)));
-                    case "/watched" -> sendMessage(chatId, putInString(userService.getWatchedFilm(chatId)));
+                    case "/watchedlist" -> sendMessage(chatId, putInString(userService.getWatchedFilm(chatId)));
                     case "/myactors" -> sendMessage(chatId, putInString(userService.getFavouriteActor(chatId)));
                     default -> sendMessage(chatId, "sorry, command was not recognized");
                 }

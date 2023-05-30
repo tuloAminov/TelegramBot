@@ -45,6 +45,18 @@ public class FilmService {
         return filmRepository.findAllByCountry(country);
     }
 
+    public List<Film> getFilmsByActor(Long actorId) {
+        List<Film> films = new ArrayList<>();
+        for (Long id : filmRepository.findFilmsByActor(actorId)) {
+            films.add(filmRepository.getFilmById(id).get(0));
+        }
+        return films;
+    }
+
+    public void add(Long actor_id, Long film_id) {
+        filmRepository.addActorFilm(actor_id, film_id);
+    }
+
     public String getGenres() {
         StringBuilder stringBuilder = new StringBuilder();
         List<String> genres = new ArrayList<>();

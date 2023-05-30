@@ -59,7 +59,6 @@ public class UserService {
         return actors;
     }
 
-
     public void addFavouriteFilm(Long userId, Long filmId) {
         userRepository.addFavouriteFilm(userId, filmId);
     }
